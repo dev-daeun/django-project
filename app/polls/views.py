@@ -19,16 +19,6 @@ def detail(request, question_id):
         return render(request, '404.html', {
             'message': 'Question Does not exists.'
         })
-    # try:
-    #     detail_question = Question.objects.get(
-    #         id=question_id
-    #     )
-    # except Question.DoesNotExist:
-    #     context = {
-    #         'message': 'Question does not exists.'
-    #     }
-    #     raise render(request, '404.html', context)
-    # else:
     context = {
         'question': question,
     }
