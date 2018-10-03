@@ -7,8 +7,8 @@ from .views import *
 # polls/templates/polls/index.html 참고
 app_name = 'polls'
 urlpatterns = [
-    path('', index, name='poll-index'),
-    path('<int:question_id>/', detail, name='detail'),
-    path('<int:question_id>/results/', result, name='results'),
-    path('<int:question_id>/vote/', vote, name='vote'),
+    path('', IndexView.as_view(), name='index'),
+    path('<int:question_id>/', DetailView.as_view(), name='detail'),
+    path('<int:question_id>/results/', ResultsView.as_view(), name='results'),
+    path('<int:question_id>/vote/', VoteView.as_view(), name='vote'),
 ]
