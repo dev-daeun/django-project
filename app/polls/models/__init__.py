@@ -1,2 +1,2 @@
-from .Question import Question
-from .Choice import Choice
+from .question import Question
+from .choice import Choice

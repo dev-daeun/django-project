@@ -1,6 +1,6 @@
 from django.db import models
 
-from .Question import Question
+from .question import Question
 
 
 class Choice(models.Model):
