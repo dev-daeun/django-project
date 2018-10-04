@@ -13,7 +13,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Returns the last 5 published questions."""
-        return self.model.objects.order_by('-pub_date')[:5]
+        return self.model.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
 
 class DetailView(generic.DetailView):
@@ -25,7 +25,11 @@ class DetailView(generic.DetailView):
     pk_url_kwarg = 'question_id'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, id=self.kwargs['question_id'])
+        requested_question = get_object_or_404(self.model, id=self.kwargs['question_id'])
+        if requested_question.pub_date > timezone.now():
+            raise Http404
+        else:
+            return requested_question
 
 
 class ResultsView(generic.DetailView):
@@ -52,5 +56,3 @@ class VoteView(generic.edit.CreateView):
             selected_choice.votes = F('votes') + 1
             selected_choice.save()
             return redirect(self.success_url, question_id=self.kwargs['question_id'])
-
-
