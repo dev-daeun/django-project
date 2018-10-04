@@ -1,6 +1,6 @@
-from django.contrib import admin
 from django.urls import path
 
+# views 패키지의 __init__.py를 참조.
 from .views import *
 
 # urls.py에 app_name을 정의하면 template에서 app_name을 url의 네임스페이스로 쓸 수 있다.
