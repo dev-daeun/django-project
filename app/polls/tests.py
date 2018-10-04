@@ -1,9 +1,92 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.shortcuts import reverse
 
 from .models import Question
 
 import datetime
+
+
+def create_question(question_text, days):
+    """
+    Create a question with the given 'question_text' and published
+    the given number of 'days' offset to now.
+    (negative for questions published in the past,
+    positive for questions that have yet to be published.)
+    :param question_text:
+    :param days:
+    :return:
+    """
+    time = timezone.now() + datetime.timedelta(days=days)
+    return Question.objects.create(question_text=question_text, pub_date=time)
+
+
+class QuestionIndexViewTests(TestCase):
+    def test_index_view_should_return_message_when_no_question_exists(self):
+        # Given
+        # Question is empty.
+
+        # When
+        response = self.client.get(reverse('polls:index'))
+
+        # Then
+        self.assertQuerysetEqual(response.context['latest_question_list'], [])
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No polls are available.")
+
+    def test_index_view_should_return_questions_whose_pub_date_in_the_past(self):
+        # Given
+        create_question(question_text="Past question.", days=-30)
+
+        # When
+        response = self.client.get(reverse('polls:index'))
+
+        # Then
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'],
+            ['<Question: Past question.>']
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_index_view_should_not_return_questions_whose_pub_date_in_the_future(self):
+        # Given
+        create_question(question_text='Future question.', days=30)
+
+        # When
+        response = self.client.get(reverse('polls:index'))
+
+        # Then
+        self.assertQuerysetEqual(response.context['latest_question_list'], [])
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No polls are available.")
+
+    def test_index_view_should_return_only_past_questions_not_future_questions(self):
+        # Given
+        create_question(question_text='Past question.', days=-30)
+        create_question(question_text='Future question.', days=30)
+
+        # When
+        response = self.client.get(reverse('polls:index'))
+
+        # Then
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'],
+            ['<Question: Past question.>']
+        )
+
+    def test_index_view_should_return_two_questions_when_two_question_are_created(self):
+        # Given
+        create_question(question_text="Past question 1.", days=-30)
+        create_question(question_text="Past question 2.", days=-5)
+
+        # When
+        response = self.client.get(reverse('polls:index'))
+
+        # Then
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'],
+            ['<Question: Past question 2.>', '<Question: Past question 1.>']
+        )
 
 
 class QuestionModelTest(TestCase):
@@ -23,7 +106,7 @@ class QuestionModelTest(TestCase):
         # Then
         self.assertIs(was__published_recently, False)
 
-    def test_was_published_recently_with_old_question_should_return_False(self):
+    def test_as_published_recently_with_old_question_should_return_False(self):
         """
         was_published_recently() returns False for questions whose pub_date is
         older than 1 day.
@@ -54,6 +137,3 @@ class QuestionModelTest(TestCase):
 
         # Then
         self.assertIs(was_published_recently, True)
-
-
-
