@@ -1,8 +1,8 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views import generic
-
-from ..models import *
+from django.utils import timezone
+from ..models import Question
 
 
 class DetailView(generic.DetailView):

@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
-from ..models import *
+from ..models import Choice
 
 
 class VoteView(generic.edit.CreateView):

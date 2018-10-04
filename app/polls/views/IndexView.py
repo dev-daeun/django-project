@@ -1,6 +1,7 @@
 from django.views import generic
+from django.utils import timezone
 
-from ..models import *
+from ..models import Question
 
 
 class IndexView(generic.ListView):
