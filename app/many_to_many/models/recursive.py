@@ -15,4 +15,5 @@ class FacebookUser(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        friends_values = ', '.join(self.friends.values_list('name', flat=True))
+        return f'{self.name} (친구: {friends_values})'
