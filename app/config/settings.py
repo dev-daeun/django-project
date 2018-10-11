@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'many_to_many',
     'one_to_one',
+    'abstract_based_classes',
 
 ]
 
