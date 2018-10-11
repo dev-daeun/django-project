@@ -25,7 +25,10 @@ SECRET_KEY = 'ri8k_3r6nct_)+45%s-h=310c&m7+5940noaje&t6$_vmno87z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'testserver',
+    'localhost',
+]
 
 # Application definition
 
@@ -38,6 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_extensions',
+
+    'many_to_many',
+    'one_to_one',
 
 ]
 
@@ -118,3 +126,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SHELL_PLUS = "ipython"
